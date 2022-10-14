@@ -25,4 +25,8 @@ async def ping(ctx: Context):
     await m.edit(content=f'Pong! Latency is {ping}ms. API Latency is {round(client.latency * 1000)}ms.')
     pass
 
+@client.command()
+async def azurestatus(ctx: Context):
+    await ctx.send(f'WIP/NIY: Check for yourself: https://cloudpingtest.com/azure')
+
 client.run(TOKEN)
