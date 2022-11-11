@@ -1,4 +1,5 @@
 aiohttp==3.7.4
+pythonping
 discord.py==1.7.3
 python-dotenv
 numpy

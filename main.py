@@ -38,11 +38,26 @@ async def azurestatus(ctx: Context):
         description="Shows current Azure cluster status.",
         color=discord.Colour.dark_purple()
     )
-    
+    AZSTATUS = "OK"
+    test.add_field(name=f'Is azure up?', value=AZSTATUS, inline=0)
     test.add_field(name=f'Current location of cluster:', value=CLUSTER_LOCATION)
-    azping = await ping(LOCATIONS[CLUSTER_LOCATION], count=3)
     test.add_field(name=f'Ping of {CLUSTER_LOCATION}:', value=f'WIP/NIY: Check for yourself: https://cloudpingtest.com/azure')
     
     await ctx.send(embed=test)
+
+@client.command()
+async def isdecimup(ctx: Context):
+    m = await ctx.send("Checking... (if no change, he's down)")
+    decim = await client.fetch_user("DecimBOT 2.0#8467")
+    await decim.send("$autostat")
+
+    def check(m):
+        return "OK" in m.content.split(";")[0]
+
+    msg = await client.wait_for("message", check=check)
+    if msg:
+        await m.edit(content="DecimBot is up.")
+    else:
+        pass
 
 client.run(TOKEN)
