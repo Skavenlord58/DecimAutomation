@@ -1,9 +1,9 @@
-import discord
+import disnake
 import os
-from discord import Message
-from discord.ext.commands import Context
+from disnake import Message
+from disnake.ext.commands import Context
 from dotenv import load_dotenv
-from discord.ext import commands
+from disnake.ext import commands
 from pythonping import ping
 
 import requests
@@ -33,10 +33,10 @@ async def ping(ctx: Context):
 
 @client.command()
 async def azurestatus(ctx: Context):
-    test = discord.Embed(
+    test = disnake.Embed(
         title="Azure Status",
         description="Shows current Azure cluster status.",
-        color=discord.Colour.dark_purple()
+        color=disnake.Colour.dark_purple()
     )
     AZSTATUS = "OK"
     test.add_field(name=f'Is azure up?', value=AZSTATUS, inline=0)
