@@ -3,47 +3,45 @@ import os
 from disnake import Message
 from disnake.ext.commands import Context
 from dotenv import load_dotenv
-from disnake.ext import commands
-from pythonping import ping
-
+from disnake.ext import tasks, commands
 import requests
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('BOT_PREFIX')
-CLUSTER_LOCATION = os.getenv('CURRENT_LOCATION')
 
-LOCATIONS = {
-    'Germany North': '51.116.56.0',
-    'Germany West Central': '51.116.152.0'
-}
+# add intents for bot and command prefix for classic command support
+intents = disnake.Intents.all()
+client = disnake.ext.commands.Bot(command_prefix=PREFIX, intents=intents)
 
-client = commands.Bot(command_prefix=PREFIX)
+# running job check
+@tasks.loop(seconds = 30)
+async def check_jobs_loop():
+    print("Running job checker!")
+    pass
+    
+@check_jobs_loop.before_loop
+async def before_check_jobs():
+    print('Waiting...')
+    await client.wait_until_ready()
 
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
+    # print(check_cronjobs())
+    if check_jobs_loop.start():
+        print("DecimAutomation running...")
+    else:
+        print("DecimAutomation failed to run.")
+    
 
+## other DecimAutomation platform commands
 @client.command()
 async def ping(ctx: Context):
     m = await ctx.send(f'Ping?')
     ping = int(str(m.created_at - ctx.message.created_at).split(".")[1]) / 1000
     await m.edit(content=f'Pong! Latency is {ping}ms. API Latency is {round(client.latency * 1000)}ms.')
     pass
-
-@client.command()
-async def azurestatus(ctx: Context):
-    test = disnake.Embed(
-        title="Azure Status",
-        description="Shows current Azure cluster status.",
-        color=disnake.Colour.dark_purple()
-    )
-    AZSTATUS = "OK"
-    test.add_field(name=f'Is azure up?', value=AZSTATUS, inline=0)
-    test.add_field(name=f'Current location of cluster:', value=CLUSTER_LOCATION)
-    test.add_field(name=f'Ping of {CLUSTER_LOCATION}:', value=f'WIP/NIY: Check for yourself: https://cloudpingtest.com/azure')
-    
-    await ctx.send(embed=test)
 
 @client.command()
 async def isdecimup(ctx: Context):
@@ -58,6 +56,20 @@ async def isdecimup(ctx: Context):
     if msg:
         await m.edit(content="DecimBot is up.")
     else:
+        pass
+
+
+## parsing incoming messages
+@client.event
+async def on_message(m: Message):
+    if not m.content:
+        pass
+    elif m.content[0] == PREFIX:
+        # needed for commands to work    
+        await client.process_commands(m)
+    elif str(m.author) != "DecimAutomation#4633":
+        # you can add your automatic reactions
+        # check decimbot2 for inspiration
         pass
 
 client.run(TOKEN)

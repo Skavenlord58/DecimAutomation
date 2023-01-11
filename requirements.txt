@@ -1,7 +1,4 @@
-aiohttp==3.7.4
-pythonping
-discord.py==1.7.3
+disnake
 python-dotenv
-numpy
 requests
 asyncio
