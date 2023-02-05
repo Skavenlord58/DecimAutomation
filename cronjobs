@@ -25,7 +25,7 @@
 ## Lines starting with "#" are skipped by the parser
 ## Parsing itself is done every 5 minutes.
 
-@five decimautomation check_cronjobs
+@five decimautomation autoserv.precheck_jobs
 # DO NOT DELETE THIS LINE, ELSE THE LIST WON'T BE PARSED WHEN RUNNING AND ONLY ON_READY() ^^^^^^^
 
-@weekly decimbot2 xkcd_itpero
+@weekly decimbot2 xkcd-itpero
